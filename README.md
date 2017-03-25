@@ -1,6 +1,8 @@
 # RRBannerView
 Simple banner view that can be used to show short messages and alerts in iOS apps
 
+[![visit https://github.com/Rohit-Ragmahale/RRBannerView](https://github.com/Rohit-Ragmahale/RRBannerView/blob/master/Sample.png)]
+
 ## How to use?
 
 ```objc
