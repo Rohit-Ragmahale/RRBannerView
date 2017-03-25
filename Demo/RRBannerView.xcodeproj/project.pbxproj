@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D50E15941E866ED50058E2EC /* like.png in Resources */ = {isa = PBXBuildFile; fileRef = D50E15931E866ED40058E2EC /* like.png */; };
 		D5E496B41E7E43AA00DCA67F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E496B31E7E43AA00DCA67F /* AppDelegate.swift */; };
 		D5E496B61E7E43AA00DCA67F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E496B51E7E43AA00DCA67F /* ViewController.swift */; };
 		D5E496B91E7E43AA00DCA67F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5E496B71E7E43AA00DCA67F /* Main.storyboard */; };
@@ -17,7 +16,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D50E15931E866ED40058E2EC /* like.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = like.png; sourceTree = "<group>"; };
 		D5E496B01E7E43AA00DCA67F /* RRBannerView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RRBannerView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E496B31E7E43AA00DCA67F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D5E496B51E7E43AA00DCA67F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -39,6 +37,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D53D1AF71E86C29200630877 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				D5E496BA1E7E43AA00DCA67F /* Assets.xcassets */,
+				D5E496BC1E7E43AA00DCA67F /* LaunchScreen.storyboard */,
+				D5E496B71E7E43AA00DCA67F /* Main.storyboard */,
+				D5E496BF1E7E43AB00DCA67F /* Info.plist */,
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
+		D53D1AF81E86C2B900630877 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				D5E496B31E7E43AA00DCA67F /* AppDelegate.swift */,
+			);
+			name = AppDelegate;
+			sourceTree = "<group>";
+		};
+		D53D1AF91E86C2C400630877 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D5E496B51E7E43AA00DCA67F /* ViewController.swift */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		D53D1AFA1E86C2D100630877 /* RRBannerView */ = {
+			isa = PBXGroup;
+			children = (
+				D5E496C51E7E449400DCA67F /* RRBannerView.swift */,
+			);
+			name = RRBannerView;
+			sourceTree = "<group>";
+		};
 		D5E496A71E7E43AA00DCA67F = {
 			isa = PBXGroup;
 			children = (
@@ -58,14 +91,10 @@
 		D5E496B21E7E43AA00DCA67F /* RRBannerView */ = {
 			isa = PBXGroup;
 			children = (
-				D5E496BF1E7E43AB00DCA67F /* Info.plist */,
-				D5E496B31E7E43AA00DCA67F /* AppDelegate.swift */,
-				D50E15931E866ED40058E2EC /* like.png */,
-				D5E496B51E7E43AA00DCA67F /* ViewController.swift */,
-				D5E496B71E7E43AA00DCA67F /* Main.storyboard */,
-				D5E496BA1E7E43AA00DCA67F /* Assets.xcassets */,
-				D5E496BC1E7E43AA00DCA67F /* LaunchScreen.storyboard */,
-				D5E496C51E7E449400DCA67F /* RRBannerView.swift */,
+				D53D1AFA1E86C2D100630877 /* RRBannerView */,
+				D53D1AF91E86C2C400630877 /* ViewController */,
+				D53D1AF81E86C2B900630877 /* AppDelegate */,
+				D53D1AF71E86C29200630877 /* Resource */,
 			);
 			path = RRBannerView;
 			sourceTree = "<group>";
@@ -130,7 +159,6 @@
 			files = (
 				D5E496BE1E7E43AA00DCA67F /* LaunchScreen.storyboard in Resources */,
 				D5E496BB1E7E43AA00DCA67F /* Assets.xcassets in Resources */,
-				D50E15941E866ED50058E2EC /* like.png in Resources */,
 				D5E496B91E7E43AA00DCA67F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
