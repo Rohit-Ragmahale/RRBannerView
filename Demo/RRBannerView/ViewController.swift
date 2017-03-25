@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func showBannerViewAtBottom(sender: AnyObject) {
-        let bannner: RRBannerView = RRBannerView(title: "RRBannerView", message: "iOS is the second most popular mobile operating system in the world, after Android.", image:UIImage(named: "like"), view: self.view)
+        let bannner: RRBannerView = RRBannerView(title: "RRBannerView", message: "iOS is the second most popular mobile operating system in the world, after Android.", image:UIImage(named: "apple"), view: self.view)
         bannner.autoDismiss = true
         bannner.show(.bottom)
     }

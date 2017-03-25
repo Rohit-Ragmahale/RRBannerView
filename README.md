@@ -1,6 +1,19 @@
 # RRBannerView
 Simple banner view that can be used to show short messages and alerts in iOS apps
 
+## How to use?
+
+```objc
+
+@IBAction func showBannerViewAtBottom(sender: AnyObject) {
+let bannner: RRBannerView = RRBannerView(title: "RRBannerView", message: "iOS is the second most popular mobile operating system in the world, after Android.", image:UIImage(named: "apple"), view: self.view)
+bannner.autoDismiss = true
+bannner.show(.bottom)
+}
+
+```
+
+
 ## Features
 * Simple view having title, message and image
 * Easy to use
@@ -9,4 +22,3 @@ Simple banner view that can be used to show short messages and alerts in iOS app
 
 ## TODO
 * Action buttons
-* Delegates methods
