@@ -23,7 +23,7 @@
                                     <constraint firstAttribute="height" constant="78" id="bhz-un-s5D"/>
                                     <constraint firstAttribute="width" constant="177" id="eWW-Jb-kgx"/>
                                 </constraints>
-                                <state key="normal" title="Top"/>
+                                <state key="normal" title="Top Banner"/>
                                 <connections>
                                     <action selector="showBannerViewAtTop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="I3j-WJ-wZ9"/>
                                 </connections>
@@ -34,7 +34,7 @@
                                     <constraint firstAttribute="width" constant="177" id="anb-Vk-C7Q"/>
                                     <constraint firstAttribute="height" constant="78" id="xmS-yi-XYb"/>
                                 </constraints>
-                                <state key="normal" title="Middle"/>
+                                <state key="normal" title="Middle Banner"/>
                                 <connections>
                                     <action selector="showBannerViewAtMiddle:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0eA-zf-qcv"/>
                                 </connections>
@@ -45,11 +45,17 @@
                                     <constraint firstAttribute="height" constant="78" id="4k9-sd-D35"/>
                                     <constraint firstAttribute="width" constant="177" id="92N-e0-coa"/>
                                 </constraints>
-                                <state key="normal" title="Bottom"/>
+                                <state key="normal" title="Bottom Banner"/>
                                 <connections>
                                     <action selector="showBannerViewAtBottom:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Dtl-TQ-Bgk"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RRBannerView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P4P-Sj-ZWK">
+                                <rect key="frame" x="212" y="60" width="177" height="30"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -60,7 +66,9 @@
                             <constraint firstItem="v6c-aN-Kfo" firstAttribute="centerX" secondItem="eJj-PA-Lwf" secondAttribute="centerX" id="XwG-aJ-aee"/>
                             <constraint firstItem="v6c-aN-Kfo" firstAttribute="height" secondItem="11K-A3-L7l" secondAttribute="height" id="dzp-nQ-V3i"/>
                             <constraint firstItem="v6c-aN-Kfo" firstAttribute="top" secondItem="eJj-PA-Lwf" secondAttribute="bottom" constant="30" id="rrn-FK-14A"/>
+                            <constraint firstItem="P4P-Sj-ZWK" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="40" id="wWc-us-u4Z"/>
                             <constraint firstItem="v6c-aN-Kfo" firstAttribute="width" secondItem="eJj-PA-Lwf" secondAttribute="width" id="xfE-4h-Mml"/>
+                            <constraint firstItem="P4P-Sj-ZWK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="yxb-DM-7YR"/>
                             <constraint firstItem="v6c-aN-Kfo" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="zc0-hM-MQQ"/>
                             <constraint firstItem="v6c-aN-Kfo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zhm-WF-ss5"/>
                         </constraints>
