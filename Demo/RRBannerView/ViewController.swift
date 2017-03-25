@@ -11,13 +11,13 @@ import UIKit
 class ViewController: UIViewController {
     @IBAction func showBannerViewAtTop(sender: AnyObject) {
         let bannner: RRBannerView = RRBannerView(title: "", message: "", image:UIImage(named: "like"), view: self.view)
-        bannner.autoDismiss = true
+        bannner.autoDismiss = false
         bannner.show(.top)
     }
     
     @IBAction func showBannerViewAtBottom(sender: AnyObject) {
         let bannner: RRBannerView = RRBannerView(title: "RRBannerView", message: "iOS is the second most popular mobile operating system in the world, after Android.", image:nil, view: self.view)
-        bannner.autoDismiss = true
+        bannner.autoDismiss = false
         bannner.show(.bottom)
     }
     
