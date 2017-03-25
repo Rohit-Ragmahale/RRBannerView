@@ -53,6 +53,8 @@ class RRBannerView: UIView {
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         if let _ = superview {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("rotated"), name: UIDeviceOrientationDidChangeNotification, object: nil)
+            // NotificationCenter.default.addObserver(self, selector: Selector("dissmissSelf:"), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
             self.alpha = 0.0
             populateDetails()
             addToParent()
@@ -84,6 +86,23 @@ class RRBannerView: UIView {
         }
     }
     
+    /**
+     This method refresh the contents when device rotates
+     
+     */
+    func rotated() {
+        // TODO: optimise this
+        self.removeConstraints(self.constraints)
+        let subViews = self.subviews
+        for subview in subViews {
+            subview.removeFromSuperview()
+        }
+        layoutIfNeeded()
+        populateDetails()
+        addToParent()
+        layoutIfNeeded()
+    }
+    
     // MARK: - Private Methods
     /**
     This method removes RRBannerView from parent view
@@ -95,6 +114,7 @@ class RRBannerView: UIView {
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             self.alpha = 0.0
             }) { (success: Bool) -> Void in
+                NSNotificationCenter.defaultCenter().removeObserver(self)
                 self.removeFromSuperview()
         }
     }
