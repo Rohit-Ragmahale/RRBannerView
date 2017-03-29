@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 class RRBannerView: UIView {
     // This is enum which decides the position of the banner in view
     enum BannerPosition: Int {
@@ -16,21 +15,21 @@ class RRBannerView: UIView {
         case bottom = 2 // Bottom in view. Default value.
     }
     
-    private var parentView: UIView? = nil
-    private var message: String? = nil
-    private var title: String? = nil
-    private var image: UIImage? = nil
+    fileprivate var parentView: UIView? = nil
+    fileprivate var message: String? = nil
+    fileprivate var title: String? = nil
+    fileprivate var image: UIImage? = nil
     
-    var autoDismiss: Bool = false
-    private let viewDisplayDuration: NSTimeInterval = 3.0
-    private let imageViewSize: CGFloat = 30.0
-    private let defaultPadding: CGFloat = 10.0
-    private let interMessagePadding: CGFloat = 5.0
-    private var bannerViewHeight: CGFloat = 100.0
-    private let miniBannerHeight: CGFloat = 70.0
-    private let maxLineLimitForTitle = 5
-    private var position: BannerPosition = .bottom
-    private var timer: NSTimer? = nil
+    var autoDismiss: Bool = true
+    fileprivate let viewDisplayDuration: TimeInterval = 3.0
+    fileprivate let imageViewSize: CGFloat = 30.0
+    fileprivate let defaultPadding: CGFloat = 10.0
+    fileprivate let interMessagePadding: CGFloat = 5.0
+    fileprivate var bannerViewHeight: CGFloat = 100.0
+    fileprivate let miniBannerHeight: CGFloat = 70.0
+    fileprivate let maxLineLimitForTitle = 5
+    fileprivate var position: BannerPosition = .bottom
+    fileprivate var timer: Timer? = nil
     
     // MARK: - Init Methods
     /**
@@ -53,17 +52,16 @@ class RRBannerView: UIView {
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         if let _ = superview {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("rotated"), name: UIDeviceOrientationDidChangeNotification, object: nil)
-            // NotificationCenter.default.addObserver(self, selector: Selector("dissmissSelf:"), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(RRBannerView.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
             self.alpha = 0.0
             populateDetails()
             addToParent()
             addTapgesture()
             if autoDismiss {
-                timer = NSTimer.scheduledTimerWithTimeInterval(viewDisplayDuration, target: self, selector: Selector("dissmissSelf:"), userInfo: nil, repeats: true)
+                timer = Timer.scheduledTimer(timeInterval: viewDisplayDuration, target: self, selector: #selector(RRBannerView.dissmissSelf(_:)), userInfo: nil, repeats: true)
             }
             layoutIfNeeded()
-            UIView.animateWithDuration(0.5, animations: { () -> Void in
+            UIView.animate(withDuration: 0.5, animations: { () -> Void in
                 self.alpha = 1.0
             })
         }
@@ -76,7 +74,7 @@ class RRBannerView: UIView {
     - parameter position: banner position in parent view
     
     */
-    func show(position: BannerPosition = .bottom) {
+    func show(_ position: BannerPosition = .bottom) {
         self.position = position
         if let _ = parentView {
             //backgroundColor = UIColor.redColor()
@@ -109,22 +107,22 @@ class RRBannerView: UIView {
     
     - parameter sender: UITapGestureRecognizer.
     */
-    func dissmissSelf(sender: UITapGestureRecognizer) {
+    func dissmissSelf(_ sender: UITapGestureRecognizer) {
         timer?.invalidate()
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
+        UIView.animate(withDuration: 0.5, animations: { () -> Void in
             self.alpha = 0.0
-            }) { (success: Bool) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self)
+            }, completion: { (success: Bool) -> Void in
+                NotificationCenter.default.removeObserver(self)
                 self.removeFromSuperview()
-        }
+        }) 
     }
     
     /**
      This method adds tap gesture to RRBannerView
      
      */
-    private func addTapgesture() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("dissmissSelf:"))
+    fileprivate func addTapgesture() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(RRBannerView.dissmissSelf(_:)))
         tap.numberOfTapsRequired = 1
         addGestureRecognizer(tap)
     }
@@ -133,65 +131,70 @@ class RRBannerView: UIView {
      This method adds RRBannerView to parent view
      
      */
-    private func addToParent() {
+    fileprivate func addToParent() {
         let views : [String : AnyObject] = ["self": self, "parentView": parentView!]
         var allConstraints = [NSLayoutConstraint]()
-        allConstraints += NSLayoutConstraint.constraintsWithVisualFormat(
-            "H:|-0-[self]-0-|", options: [.AlignAllCenterY], metrics: nil, views: views)
+        allConstraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "H:|-0-[self]-0-|", options: [.alignAllCenterY], metrics: nil, views: views)
         switch(position) {
         case .top:
-            allConstraints += NSLayoutConstraint.constraintsWithVisualFormat(
-                "V:|-(\(defaultPadding))-[self(\(bannerViewHeight))]", options: [], metrics: nil,views: views)
+            allConstraints += NSLayoutConstraint.constraints(
+                withVisualFormat: "V:|-(\(defaultPadding))-[self(\(bannerViewHeight))]", options: [], metrics: nil,views: views)
             break
         case .middle:
             // TODO: Add visual constraint
-            allConstraints += [NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: parentView!, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0)]
-            allConstraints += [NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: bannerViewHeight)]
+            allConstraints += [NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: parentView!, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant: 0.0)]
+            allConstraints += [NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: bannerViewHeight)]
             break
         case .bottom:
-            allConstraints += NSLayoutConstraint.constraintsWithVisualFormat(
-                "V:[self(\(bannerViewHeight))]-0-|", options: [], metrics: nil,views: views)
+            allConstraints += NSLayoutConstraint.constraints(
+                withVisualFormat: "V:[self(\(bannerViewHeight))]-0-|", options: [], metrics: nil,views: views)
             break
         }
-        NSLayoutConstraint.activateConstraints(allConstraints)
+        NSLayoutConstraint.activate(allConstraints)
     }
     
-    private func addTitleLabel(titleLabel: UILabel, containerView: UIView) -> (titleLabel: UILabel, labelHeight: CGFloat) {
+    fileprivate func addTitleLabel(_ titleLabel: UILabel, containerView: UIView) -> (titleLabel: UILabel, labelHeight: CGFloat) {
         let leftPadding = image == nil ? defaultPadding : defaultPadding + imageViewSize + defaultPadding
-        titleLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        titleLabel.font = UIFont.boldSystemFontOfSize(16)
+        titleLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
         titleLabel.numberOfLines = maxLineLimitForTitle
-        titleLabel.textAlignment = .Center
+        titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(titleLabel)
         let views = ["titleLabel" : titleLabel, "containerView" : containerView]
         var allConstraints = [NSLayoutConstraint]()
-        allConstraints += NSLayoutConstraint.constraintsWithVisualFormat(
-            "H:|-(\(leftPadding))-[titleLabel]-(\(defaultPadding))-|", options: [.AlignAllCenterY], metrics: nil, views: views)
-        allConstraints += NSLayoutConstraint.constraintsWithVisualFormat(
-            "V:|-(\(defaultPadding))-[titleLabel]", options: [], metrics: nil,views: views)
-        NSLayoutConstraint.activateConstraints(allConstraints)
+        allConstraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "H:|-(\(leftPadding))-[titleLabel]-(\(defaultPadding))-|", options: [.alignAllCenterY], metrics: nil, views: views)
+        allConstraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "V:|-(\(defaultPadding))-[titleLabel]", options: [], metrics: nil,views: views)
+        NSLayoutConstraint.activate(allConstraints)
         titleLabel.text = title
         return (titleLabel: titleLabel, labelHeight: calculateHeightForLabel(titleLabel))
     }
     
-    private func addMessageTextView(titleLabel: UILabel, containerView: UIView) -> CGFloat  {
+    fileprivate func addMessageTextView(_ titleLabel: UILabel, containerView: UIView) -> CGFloat {
         let messageTextView: UITextView = UITextView(frame: .zero)
         let leftPadding = image == nil ? defaultPadding : defaultPadding + imageViewSize + defaultPadding
         var textViewHeight: CGFloat = 0
-        messageTextView.frame = CGRectMake(0, 0, (parentView?.frame.width)! - (image == nil ? defaultPadding * 4 : defaultPadding * 5 + imageViewSize), parentView!.frame.height)
-        messageTextView.editable = false
-        messageTextView.font = UIFont.systemFontOfSize(14)
-        messageTextView.textAlignment = .Center
+        messageTextView.frame = CGRect(x: 0, y: 0, width: (parentView?.frame.width)! - (image == nil ? defaultPadding * 4 : defaultPadding * 5 + imageViewSize), height: parentView!.frame.height)
+        messageTextView.isEditable = false
+        messageTextView.font = UIFont.systemFont(ofSize: 14)
+        messageTextView.textAlignment = .center
         messageTextView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(messageTextView)
         let views = ["titleLabel" : titleLabel, "containerView" : containerView, "messageTextView" : messageTextView]
         var allConstraints = [NSLayoutConstraint]()
-        allConstraints += NSLayoutConstraint.constraintsWithVisualFormat(
-            "H:|-\(leftPadding)-[messageTextView]-(\(defaultPadding))-|", options: [.AlignAllCenterY], metrics: nil, views: views)
-        allConstraints += title?.characters.count > 0 ? NSLayoutConstraint.constraintsWithVisualFormat(
-            "V:[titleLabel]-(\(interMessagePadding))-[messageTextView]", options: [], metrics: nil,views: views) : NSLayoutConstraint.constraintsWithVisualFormat(
-                "V:|-(\(defaultPadding))-[messageTextView]", options: [], metrics: nil,views: views)
+        allConstraints += NSLayoutConstraint.constraints(
+            withVisualFormat: "H:|-\(leftPadding)-[messageTextView]-(\(defaultPadding))-|", options: [.alignAllCenterY], metrics: nil, views: views)
+        if let title = title, title.characters.count > 0 {
+            allConstraints +=  NSLayoutConstraint.constraints(
+                withVisualFormat: "V:[titleLabel]-(\(interMessagePadding))-[messageTextView]", options: [], metrics: nil,views: views)
+        }
+        else {
+            allConstraints += NSLayoutConstraint.constraints(
+                withVisualFormat: "V:|-(\(defaultPadding))-[messageTextView]", options: [], metrics: nil,views: views)
+        }
         messageTextView.text = message
         let maxTextViewHeight: CGFloat = parentView!.frame.height * 0.60
         let contentSize = messageTextView.sizeThatFits(messageTextView.bounds.size)
@@ -199,14 +202,14 @@ class RRBannerView: UIView {
         var frame = messageTextView.frame
         frame.size.height = textViewHeight
         messageTextView.frame = frame
-        allConstraints += [NSLayoutConstraint(item: messageTextView, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: textViewHeight)]
-        NSLayoutConstraint.activateConstraints(allConstraints)
-        messageTextView.scrollEnabled = (contentSize.height >= maxTextViewHeight) ? true : false
+        allConstraints += [NSLayoutConstraint(item: messageTextView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: textViewHeight)]
+        NSLayoutConstraint.activate(allConstraints)
+        messageTextView.isScrollEnabled = (contentSize.height >= maxTextViewHeight) ? true : false
         
         return textViewHeight
     }
     
-    private func addImageView(containerView: UIView) {
+    fileprivate func addImageView(_ containerView: UIView) {
         let imageView = UIImageView(frame: .zero)
         imageView.image = image
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -217,34 +220,35 @@ class RRBannerView: UIView {
             //allConstraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(defaultPadding)-[imageView(\(imageViewSize))]", options: [.AlignAllCenterY], metrics: nil, views: views)
             
             // TODO: Add visual constraint
-            allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: containerView, attribute: NSLayoutAttribute.CenterX, multiplier: 1.0, constant: 0.0)]
-            allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: imageViewSize)]
-            NSLayoutConstraint.activateConstraints(allConstraints)
+            allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: containerView, attribute: NSLayoutAttribute.centerX, multiplier: 1.0, constant: 0.0)]
+            allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: imageViewSize)]
+            NSLayoutConstraint.activate(allConstraints)
         }
         else {
-            allConstraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(defaultPadding)-[imageView(\(imageViewSize))]", options: [.AlignAllCenterY], metrics: nil, views: views)
+            allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(defaultPadding)-[imageView(\(imageViewSize))]", options: [.alignAllCenterY], metrics: nil, views: views)
         }
         
         // TODO: Add visual constraint
-        allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: containerView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 0.0)]
-        allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: imageViewSize)]
-        NSLayoutConstraint.activateConstraints(allConstraints)
+        allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: containerView, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant: 0.0)]
+        allConstraints += [NSLayoutConstraint(item: imageView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: imageViewSize)]
+        NSLayoutConstraint.activate(allConstraints)
         
     }
     
-    private func addContainerView() -> UIView {
+    fileprivate func addContainerView() -> UIView {
         let containerView = UIView(frame: .zero)
-        containerView.backgroundColor = .whiteColor()
+        containerView.backgroundColor = .white
         containerView.layer.cornerRadius = 5.0
         containerView.layer.borderWidth = 1.0
-        containerView.layer.borderColor = UIColor.lightGrayColor().CGColor
+        containerView.layer.borderColor = UIColor.lightGray.cgColor
         containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addShadow()
         addSubview(containerView)
         let views : [String : AnyObject] = ["self": self, "containerView": containerView]
         var allConstraints = [NSLayoutConstraint]()
-        allConstraints += NSLayoutConstraint.constraintsWithVisualFormat("H:|-(\(defaultPadding))-[containerView]-(\(defaultPadding))-|", options: [.AlignAllCenterY], metrics: nil, views: views)
-        allConstraints += NSLayoutConstraint.constraintsWithVisualFormat("V:|-(\(defaultPadding))-[containerView]-(\(defaultPadding))-|", options: [], metrics: nil,views: views)
-        NSLayoutConstraint.activateConstraints(allConstraints)
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(\(defaultPadding))-[containerView]-(\(defaultPadding))-|", options: [.alignAllCenterY], metrics: nil, views: views)
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-(\(defaultPadding))-[containerView]-(\(defaultPadding))-|", options: [], metrics: nil,views: views)
+        NSLayoutConstraint.activate(allConstraints)
         return containerView
     }
     
@@ -252,7 +256,7 @@ class RRBannerView: UIView {
      This method populates RRBannerView. It adds title, message and image to be shown on banner.
      
      */
-    private func populateDetails() {
+    fileprivate func populateDetails() {
         var titleLabel: UILabel = UILabel(frame: .zero)
         
         var textViewHeight: CGFloat = 0
@@ -261,14 +265,14 @@ class RRBannerView: UIView {
         let containerView = addContainerView()
         
         // Add message text if given
-        if title?.characters.count > 0 {
+        if let title = title, title.characters.count > 0 {
             let titleTuple = addTitleLabel(titleLabel, containerView: containerView)
             titleLabel = titleTuple.titleLabel
             titleLabelHeight = titleTuple.labelHeight
             interMessagePadding = self.interMessagePadding
         }
         // Add message text if given
-        if message?.characters.count > 0 {
+        if let message = message, message.characters.count > 0 {
             textViewHeight = addMessageTextView(titleLabel, containerView: containerView)
         }
         // Add image if given
@@ -288,14 +292,23 @@ class RRBannerView: UIView {
      
      - returns: view height.
      */
-    private func calculateHeightForLabel(label: UILabel) -> CGFloat {
+    fileprivate func calculateHeightForLabel(_ label: UILabel) -> CGFloat {
         let leftPadding = image == nil ? defaultPadding * 4 : defaultPadding * 5 + imageViewSize
-        let dummylabel:UILabel = UILabel(frame: CGRectMake(0, 0, (parentView?.frame.width)! - leftPadding, CGFloat.max))
+        let dummylabel:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: (parentView?.frame.width)! - leftPadding, height: CGFloat.greatestFiniteMagnitude))
         dummylabel.numberOfLines = maxLineLimitForTitle
-        dummylabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        dummylabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         dummylabel.font = label.font
         dummylabel.text = label.text
         dummylabel.sizeToFit()
         return dummylabel.frame.height
+    }
+}
+
+private extension UIView {
+    func addShadow(shadowColor: CGColor = UIColor.black.cgColor, shadowOffset: CGSize = CGSize(width: 1.0, height: 2.0), shadowOpacity: Float = 0.4, shadowRadius: CGFloat = 3.0) {
+        layer.shadowColor = shadowColor
+        layer.shadowOffset = shadowOffset
+        layer.shadowOpacity = shadowOpacity
+        layer.shadowRadius = shadowRadius
     }
 }
