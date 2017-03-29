@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 class RRBannerView: UIView {
     // This is enum which decides the position of the banner in view
     enum BannerPosition: Int {
@@ -21,6 +22,8 @@ class RRBannerView: UIView {
     fileprivate var image: UIImage? = nil
     
     var autoDismiss: Bool = true
+    var titleFont = UIFont.boldSystemFont(ofSize: 16)
+    var messageFont = UIFont.systemFont(ofSize: 14)
     fileprivate let viewDisplayDuration: TimeInterval = 3.0
     fileprivate let imageViewSize: CGFloat = 30.0
     fileprivate let defaultPadding: CGFloat = 10.0
@@ -52,7 +55,7 @@ class RRBannerView: UIView {
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         if let _ = superview {
-            NotificationCenter.default.addObserver(self, selector: #selector(RRBannerView.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(RRBannerView.deviceRotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
             self.alpha = 0.0
             populateDetails()
             addToParent()
@@ -84,11 +87,13 @@ class RRBannerView: UIView {
         }
     }
     
+    // MARK: - Notification Handling
+    
     /**
      This method refresh the contents when device rotates
      
      */
-    func rotated() {
+    func deviceRotated() {
         // TODO: optimise this
         self.removeConstraints(self.constraints)
         let subViews = self.subviews
@@ -157,7 +162,7 @@ class RRBannerView: UIView {
     fileprivate func addTitleLabel(_ titleLabel: UILabel, containerView: UIView) -> (titleLabel: UILabel, labelHeight: CGFloat) {
         let leftPadding = image == nil ? defaultPadding : defaultPadding + imageViewSize + defaultPadding
         titleLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        titleLabel.font = titleFont
         titleLabel.numberOfLines = maxLineLimitForTitle
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -170,7 +175,12 @@ class RRBannerView: UIView {
             withVisualFormat: "V:|-(\(defaultPadding))-[titleLabel]", options: [], metrics: nil,views: views)
         NSLayoutConstraint.activate(allConstraints)
         titleLabel.text = title
-        return (titleLabel: titleLabel, labelHeight: calculateHeightForLabel(titleLabel))
+        
+        let paddingForHeight = image == nil ? defaultPadding * 4 : defaultPadding * 5 + imageViewSize
+        titleLabel.frame = CGRect(x: 0, y: 0, width: (parentView?.frame.width)! - paddingForHeight, height: CGFloat.greatestFiniteMagnitude)
+        titleLabel.sizeToFit()
+        
+        return (titleLabel: titleLabel, labelHeight: titleLabel.frame.height)
     }
     
     fileprivate func addMessageTextView(_ titleLabel: UILabel, containerView: UIView) -> CGFloat {
@@ -179,7 +189,7 @@ class RRBannerView: UIView {
         var textViewHeight: CGFloat = 0
         messageTextView.frame = CGRect(x: 0, y: 0, width: (parentView?.frame.width)! - (image == nil ? defaultPadding * 4 : defaultPadding * 5 + imageViewSize), height: parentView!.frame.height)
         messageTextView.isEditable = false
-        messageTextView.font = UIFont.systemFont(ofSize: 14)
+        messageTextView.font = messageFont
         messageTextView.textAlignment = .center
         messageTextView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(messageTextView)
@@ -205,7 +215,6 @@ class RRBannerView: UIView {
         allConstraints += [NSLayoutConstraint(item: messageTextView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: textViewHeight)]
         NSLayoutConstraint.activate(allConstraints)
         messageTextView.isScrollEnabled = (contentSize.height >= maxTextViewHeight) ? true : false
-        
         return textViewHeight
     }
     
@@ -283,24 +292,6 @@ class RRBannerView: UIView {
         let viewHeight: CGFloat = 4 * defaultPadding + titleLabelHeight + interMessagePadding + textViewHeight
         bannerViewHeight = viewHeight > parentView!.frame.height ? parentView!.frame.height : viewHeight
         bannerViewHeight = (bannerViewHeight >= miniBannerHeight) ? bannerViewHeight : miniBannerHeight
-    }
-    
-    /**
-     This method calculates label height
-     
-     - parameter label: Label whose heigth needs to be calculated.
-     
-     - returns: view height.
-     */
-    fileprivate func calculateHeightForLabel(_ label: UILabel) -> CGFloat {
-        let leftPadding = image == nil ? defaultPadding * 4 : defaultPadding * 5 + imageViewSize
-        let dummylabel:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: (parentView?.frame.width)! - leftPadding, height: CGFloat.greatestFiniteMagnitude))
-        dummylabel.numberOfLines = maxLineLimitForTitle
-        dummylabel.lineBreakMode = NSLineBreakMode.byWordWrapping
-        dummylabel.font = label.font
-        dummylabel.text = label.text
-        dummylabel.sizeToFit()
-        return dummylabel.frame.height
     }
 }
 
