@@ -1,0 +1,6 @@
+framework module RRBannerView {
+  umbrella header "RRBannerView-umbrella.h"
+
+  export *
+  module * { export * }
+}

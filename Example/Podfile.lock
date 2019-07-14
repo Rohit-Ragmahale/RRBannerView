@@ -1,0 +1,16 @@
+PODS:
+  - RRBannerView (0.1.0)
+
+DEPENDENCIES:
+  - RRBannerView (from `../`)
+
+EXTERNAL SOURCES:
+  RRBannerView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  RRBannerView: af576f2610997f4551d05717e64ffc6b5f7c7b75
+
+PODFILE CHECKSUM: b029bbe382775ab41d8df5ffb39e333a2eb2d2a8
+
+COCOAPODS: 1.7.4

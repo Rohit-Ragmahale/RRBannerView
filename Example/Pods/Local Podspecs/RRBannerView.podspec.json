@@ -1,0 +1,22 @@
+{
+  "name": "RRBannerView",
+  "version": "0.1.0",
+  "summary": "A short description of RRBannerView.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Rohit-Ragmahale/RRBannerView",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Rohit-Ragmahale": "rohitragmahale.mobile@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/Rohit-Ragmahale/RRBannerView.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "RRBannerView/Classes/**/*"
+}
